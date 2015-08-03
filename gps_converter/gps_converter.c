@@ -24,12 +24,16 @@ gps_pos cartesian_to_gps(double x, double y);
 
 double calc_dist_degrees(gps_pos* start, gps_pos* end);
 /*Calculate a distance between two positions given as doubles*/
-/*Result is returned as degrees*/
+/*Result is returned in degrees*/
+
+double calc_dist_meters(gps_pos* start, gps_pos* end);
+/*Result is returned in meters*/
 
 double calc_start_course(gps_pos* start, gps_pos* end);
 /*Calculate starting course given start and end positions as doubles*/
 /*Result is returned as degrees*/
 
+/*UTILITY FUNCTIONS*/
 double calc_end_pos_lat(gps_pos* start, double start_course, double dist);
 /*Calculate end position latitude*/
 
@@ -50,8 +54,6 @@ int main(int argc, char *argv[])
 	size_t len = 0;
 	int read;
 
-
-
 	if (f == NULL){
 		printf("File does not exist!");
 		return 0;
@@ -68,11 +70,6 @@ int main(int argc, char *argv[])
 	printf("UNIT TESTS:\n");
 
 
-	double a = 30;
-
-	printf("sine of 30: %f\n", d_sin(a));
-
-
 	gps_pos start;
 	gps_pos end;
 
@@ -81,12 +78,21 @@ int main(int argc, char *argv[])
 	end.lat = 59.12;
 	end.lon = 22.43;
 
-	double dist = calc_dist_degrees(&start, &end);
+	gps_pos road_start;
+	gps_pos road_end;
+
+	road_start.lat = 59.394442;
+	road_start.lon = 24.673424;
+
+	road_end.lat = 59.392792;
+	road_end.lon = 24.670498;
+
+	printf("road width = %lf\n", calc_dist_meters(&road_start, &road_end));
+
+	double dist = calc_dist_meters(&start, &end);
 	printf("distance is: %f\n", dist);
 
-
 	gps_pos test = cartesian_to_gps(3, 2);
-
 
 	start.lat = ORIGIN_LAT;
 	start.lon = ORIGIN_LON;
@@ -100,7 +106,10 @@ int main(int argc, char *argv[])
 
 
 
-	printf("distance calculated again is: %f\n", calc_dist_degrees(&start, &test));
+
+
+	printf("distance calculated again is: %f\n", calc_dist_meters(&start, &test));
+
 
 	//fflush(stdout); 
 	return 0;
@@ -127,6 +136,17 @@ double calc_dist_degrees(gps_pos* start, gps_pos* end)
 	printf("end gps latitude is: %f\n", end->lon);
 	*/
 	return dist;
+}
+
+
+/*******************/
+/*calc_dist_degrees*/
+/*******************/
+
+double calc_dist_meters(gps_pos* start, gps_pos* end)
+{
+	return calc_dist_degrees(start, end) * 1852 * 60;
+
 }
 
 /*******************/
