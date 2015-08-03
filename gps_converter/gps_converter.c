@@ -12,6 +12,8 @@
 #define EAST = 90;
 /*In following the cartesian axis y always points to North and x always to East*/
 
+gps_pos start;
+/*A global variable for start position*/
 
 typedef struct gps_pos
 {
@@ -46,52 +48,12 @@ double d_cos(double deg);
 double rad_to_deg(double rad);
 double deg_to_rad(double deg);
 
+/*MAIN*/
+
 int main(int argc, char *argv[])
 {
-	FILE *f = fopen("coordinates.txt", "r");
-
-	char * line = NULL;
-	size_t len = 0;
-	int read;
-
-	if (f == NULL){
-		printf("File does not exist!");
-		return 0;
-	}
-
-	while ((read = getline(&line, &len, f)) != -1) {
-		printf("Retrieved line of length %zu :\n", read);
-		printf("%s", line);
-	}
-	//some comment
-
-
-
-	printf("UNIT TESTS:\n");
-
 
 	gps_pos start;
-	gps_pos end;
-
-	start.lat = 59.12;
-	start.lon = 22.43;
-	end.lat = 59.12;
-	end.lon = 22.43;
-
-	gps_pos road_start;
-	gps_pos road_end;
-
-	road_start.lat = 59.394442;
-	road_start.lon = 24.673424;
-
-	road_end.lat = 59.392792;
-	road_end.lon = 24.670498;
-
-	printf("road width = %lf\n", calc_dist_meters(&road_start, &road_end));
-
-	double dist = calc_dist_meters(&start, &end);
-	printf("distance is: %f\n", dist);
-
 	gps_pos test = cartesian_to_gps(3, 2);
 
 	start.lat = ORIGIN_LAT;
@@ -102,18 +64,21 @@ int main(int argc, char *argv[])
 
 	printf("the calculated latitude is: %f\n", test.lat);
 	printf("the calculated longitude is: %f\n", test.lon);
-	
-
-
-
-
 
 	printf("distance calculated again is: %f\n", calc_dist_meters(&start, &test));
 
 
-	//fflush(stdout); 
-	return 0;
+	if (argc == 3) 
+	{
+		start.lat = strtod(argv[1], NULL);
+		start.lon = strtod(argv[2], NULL);
+		cartesian_to_gps(strtod(argv[3], NULL), strtod(argv[4], NULL));
+	}
+	
 
+
+
+	return 0;
 }
 
 
@@ -123,18 +88,11 @@ int main(int argc, char *argv[])
 
 double calc_dist_degrees(gps_pos* start, gps_pos* end)
 {
-	
 	double val, dist;
 
 	val = d_sin(start->lat) * d_sin(end->lat) + d_cos(start->lat) * d_cos(end->lat) * d_cos(start->lon - end->lon);
 	dist = rad_to_deg (acos(val));
-	/*
-	printf("start gps latitude is: %f\n", start->lat);
-	printf("start gps latitude is: %f\n", start->lon);
 
-	printf("end gps latitude is: %f\n", end->lat);
-	printf("end gps latitude is: %f\n", end->lon);
-	*/
 	return dist;
 }
 
@@ -146,7 +104,6 @@ double calc_dist_degrees(gps_pos* start, gps_pos* end)
 double calc_dist_meters(gps_pos* start, gps_pos* end)
 {
 	return calc_dist_degrees(start, end) * 1852 * 60;
-
 }
 
 /*******************/
@@ -196,7 +153,6 @@ gps_pos calc_end_pos(gps_pos* start, double start_course, double dist){
 	
 	end->lat = end_pos_lat;
 
-
 	if (start_course > 180)
 	{
 		end->lon = start->lon - rad_to_deg(acos(num / denom));
@@ -215,10 +171,6 @@ gps_pos calc_end_pos(gps_pos* start, double start_course, double dist){
 gps_pos cartesian_to_gps(double x, double y){
 
 	double dist = sqrt(pow(x, 2) + pow(y, 2));
-
-	printf("long float distance on cartesian axes: %lf\n", dist);
-	printf("float distance on cartesian axes: %f\n", dist);
-	
 	double start_course = 90.0 - rad_to_deg(asin(y/dist));
 	
 	gps_pos* start = (gps_pos*)malloc(sizeof(gps_pos));
@@ -228,8 +180,6 @@ gps_pos cartesian_to_gps(double x, double y){
 
 	return calc_end_pos(start, start_course, dist);
 }
-
-
 
 
 
