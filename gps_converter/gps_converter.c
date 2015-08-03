@@ -87,12 +87,17 @@ int main(int argc, char *argv[])
 
 	gps_pos test = cartesian_to_gps(3, 2);
 
+
+	start.lat = ORIGIN_LAT;
+	start.lon = ORIGIN_LON;
+
+	printf("original latitude: %f\n", start.lat);
+	printf("original longitude: %f\n", start.lon);
+
 	printf("the calculated latitude is: %f\n", test.lat);
 	printf("the calculated longitude is: %f\n", test.lon);
 	
-	
-	start.lat = ORIGIN_LAT;
-	start.lon = ORIGIN_LON;
+
 
 
 	printf("distance calculated again is: %f\n", calc_dist_degrees(&start, &test));
@@ -114,13 +119,13 @@ double calc_dist_degrees(gps_pos* start, gps_pos* end)
 
 	val = d_sin(start->lat) * d_sin(end->lat) + d_cos(start->lat) * d_cos(end->lat) * d_cos(start->lon - end->lon);
 	dist = rad_to_deg (acos(val));
-	
+	/*
 	printf("start gps latitude is: %f\n", start->lat);
 	printf("start gps latitude is: %f\n", start->lon);
 
 	printf("end gps latitude is: %f\n", end->lat);
 	printf("end gps latitude is: %f\n", end->lon);
-
+	*/
 	return dist;
 }
 
@@ -190,6 +195,9 @@ gps_pos calc_end_pos(gps_pos* start, double start_course, double dist){
 gps_pos cartesian_to_gps(double x, double y){
 
 	double dist = sqrt(pow(x, 2) + pow(y, 2));
+
+	printf("long float distance on cartesian axes: %lf\n", dist);
+	printf("float distance on cartesian axes: %f\n", dist);
 	
 	double start_course = 90.0 - rad_to_deg(asin(y/dist));
 	
