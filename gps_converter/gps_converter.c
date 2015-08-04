@@ -4,6 +4,7 @@
 * @author Jaanus Kaugerand
 * @license MIT
 */
+
 #include <stdio.h>
 #include <math.h>       /* sin, cos, etc */
 
@@ -18,14 +19,16 @@
 #define EAST = 90;
 /*In following the cartesian axis y always points to North and x always to East*/
 
-gps_pos start;
-/*A global variable for start position*/
+
 
 typedef struct gps_pos
 {
 	double lat;
 	double lon;
 } gps_pos;
+
+gps_pos start;
+/*A global variable for start position*/
 
 gps_pos cartesian_to_gps(double x, double y);
 /*convert cartesian coordinates to gps coordinates*/
