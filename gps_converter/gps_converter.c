@@ -153,7 +153,8 @@ double calc_end_pos_lat(gps_pos* start, double start_course, double dist){
 
 gps_pos calc_end_pos(gps_pos* start, double start_course, double dist){
 
-	gps_pos *end = (gps_pos*)malloc(sizeof(gps_pos));
+	gps_pos *end;
+	end = (gps_pos*)malloc(sizeof(gps_pos));
 
 	double dist_degrees = (dist / 1852.0) / 60.0;
 	double end_pos_lat = calc_end_pos_lat(start, start_course, dist);
@@ -182,7 +183,8 @@ gps_pos cartesian_to_gps(double x, double y){
 	double dist = sqrt(pow(x, 2) + pow(y, 2));
 	double start_course = 90.0 - rad_to_deg(asin(y/dist));
 	
-	gps_pos* start = (gps_pos*)malloc(sizeof(gps_pos));
+	gps_pos* start;
+	start = (gps_pos*)malloc(sizeof(gps_pos));
 
 	start->lat = ORIGIN_LAT;
 	start->lon = ORIGIN_LON;
