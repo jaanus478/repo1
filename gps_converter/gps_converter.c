@@ -1,3 +1,9 @@
+/**
+* RTC interface.
+*
+* @author Jaanus Kaugerand
+* @license MIT
+*/
 #include <stdio.h>
 #include <math.h>       /* sin, cos, etc */
 
