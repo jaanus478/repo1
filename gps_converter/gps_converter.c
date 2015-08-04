@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>       /* sin, cos, etc */
 
 #define PI 3.14159265
